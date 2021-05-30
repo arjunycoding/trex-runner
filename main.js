@@ -1,28 +1,46 @@
-let dino = document.getElementById("dino");
-let cactus = document.getElementById("cactus");
-let score = 0
+document.addEventListener("DOMContentLoaded", function(){
 
-function jump(){
-    if(dino.classList != "jump")
-    dino.classList.add("jump")
-    setTimeout(function(){
-        dino.classList.remove("jump")
-    }, 300)
-}
-
-document.addEventListener("keydown", function(event){
-    jump();
-});
-
-let isAlive = setInterval(function(){
-    let dinoTop = parseInt(window.getComputedStyle(dino).getPropertyValue("top"));
-    let cactusLeft = parseInt(window.getComputedStyle(cactus).getPropertyValue("left"));
-    if(cactusLeft < 30 && cactusLeft > 0 && dinoTop){
-        alert("Game Over")
-    } else {
-        score++
+    let dino = document.querySelector(".dino");
+    let isJumping = false;
+    let gravity = 0.9
+    // let position = 0;
+    function control(e){
+        if(e.keyCode === 32){
+            if(!isJumping){
+                isJumping = true
+                jump()
+            }
+        }
     }
-    
-}, 10);
-
-console.log(score)
+    document.addEventListener('keyup', control)
+    let position = 0;
+    function jump(){
+        let count = 0;
+        let timerId = setInterval(function(){
+            if(count === 15){
+                clearInterval(timerId)
+                let downTimerId = setInterval(function(){
+                    position -= 5;
+                    count--
+                    position = position * gravity
+                    dino.style.bottom = position + 'px'
+                    if(count === 0){
+                        clearInterval(downTimerId)
+                        isJumping = false
+                    }
+                })
+            }
+            console.log("up");
+            count++
+            position += 30;
+            position = position * gravity
+            dino.style.bottom = position + 'px'
+            console.log(dino.style.bottom)
+        }, 20)
+    }
+    function generateObstacele(){
+        let obstacelePosition = 1000;
+        let obstacele = document.createElement("div")
+        obstacele.classList.add('obstacele')
+    }
+})
