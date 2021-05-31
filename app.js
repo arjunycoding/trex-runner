@@ -1,8 +1,11 @@
 document.addEventListener("DOMContentLoaded", function(){
 
     let dino = document.querySelector(".dino");
+    let grid = document.querySelector(".grid");
     let isJumping = false;
-    let gravity = 0.9
+    let gravity = 0.9;
+    let isGameOver = false;
+    let alert = document.querySelector("#alert")
     // let position = 0;
     function control(e){
         if(e.keyCode === 32){
@@ -21,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 clearInterval(timerId)
                 let downTimerId = setInterval(function(){
                     position -= 5;
+                    console.log("down")
                     count--
                     position = position * gravity
                     dino.style.bottom = position + 'px'
@@ -39,8 +43,24 @@ document.addEventListener("DOMContentLoaded", function(){
         }, 20)
     }
     function generateObstacele(){
+        let randomTime = Math.random() * 4000;
         let obstacelePosition = 1000;
         let obstacele = document.createElement("div")
-        obstacele.classList.add('obstacele')
+        grid.appendChild(obstacele)
+        obstacele.style.left = obstacelePosition + "px";
+        let timerId = setInterval(function(){
+            if(!isGameOver) obstacele.classList.add('obstacele')
+            if(obstacelePosition > 0 && obstacelePosition < 60 && position< 60){
+                clearInterval(timerId)
+                alert.innerHTML = "Game Over";
+                isGameOver = true;
+            }
+            obstacelePosition -= 10
+            obstacele.style.left = obstacelePosition + "px "
+        }, 20)
+        if(!isGameOver){
+            setTimeout(generateObstacele, randomTime)
+        }
     }
+    generateObstacele()
 })
